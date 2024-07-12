@@ -14,7 +14,44 @@ def getPath(directory=None):
 
 # Create the interface class to handle the GUI
 class Interface:
-    pass
+    def __init__(self):
+        # Attributes
+        self.root = tk.Tk()
+        self.root.title("Gestión de tiempo")
+        self.root.geometry("400x200")
+        self.root.resizable(True, True)
+        self.root.configure(bg="light blue")
+        self.label = tk.Label(self.root, text="Gestión de tiempo", bg="light blue", font=("Arial", 20))
+        self.label.pack(pady=10)
+        self.button = tk.Button(self.root, text="Iniciar", bg="light green", font=("Arial", 15), command=self.start_timer)
+        self.button.pack(pady=10)
+        self.root.mainloop()
+        
+    def start_timer(self, timeInSeconds):
+        # Error handling with try-except block
+        try:
+            # Create an instance of the Timer class and start the timer
+            temporizador = Timer(timeInSeconds)
+            # Initiate the thread to start the timer and the counter
+            t = threading.Thread(target=temporizador.start_counter)
+            t.start()
+            
+            # Simulate the pause and continue of the timer
+            sleep(2)
+            temporizador.pause_counter()
+            print("Temporizador en pausa")
+            sleep(4)
+            temporizador.continue_counter()
+            print("Temporizador continuado")
+
+            t.join()
+            start_time, diff_time, end_time = temporizador.stop_counter()
+            paused_time = temporizador.paused_time_total
+            paused_time_str = str(paused_time).split(".")[0]
+            df = temporizador.create_DataFrame(start_time, diff_time, end_time, paused_time_str)
+            temporizador.export_data_to_excel(df)
+        except Exception as e:
+            print(e)
 
 # Create the FileHandling class to handle the data
 class FileHandling:
@@ -41,7 +78,7 @@ class FileHandling:
         paused_time = df["Tiempo pausado"].to_dict()
         data = {"Hora de inicio": start_time, "Diferencia de tiempo": time_diff, "Hora de finalización": end_time, "Tiempo pausado": paused_time}
         return data
-    
+
     def create_DataFrame(self, start_time, time_diff, end_time, paused_time):
         data = self.parseData()
         for i in range(len(data["Hora de inicio"].keys()) + 1):
@@ -103,28 +140,28 @@ class Timer(FileHandling): # Inherit from the FileHandling class
         diff_time_str = str(diff_time).split(".")[0]
         return start_time_str, diff_time_str, end_time_str
     
-# ********************************************************************************************************************
-# Error handling with try-except block
-try:
-    # Create an instance of the Timer class and start the timer
-    temporizador = Timer(5)
-    # Initiate the thread to start the timer and the counter
-    t = threading.Thread(target=temporizador.start_counter)
-    t.start()
+# # ********************************************************************************************************************
+# # Error handling with try-except block
+# try:
+#     # Create an instance of the Timer class and start the timer
+#     temporizador = Timer(5)
+#     # Initiate the thread to start the timer and the counter
+#     t = threading.Thread(target=temporizador.start_counter)
+#     t.start()
     
-    # Simular la pausa y continuación
-    sleep(2)
-    temporizador.pause_counter()
-    print("Temporizador en pausa")
-    sleep(4)
-    temporizador.continue_counter()
-    print("Temporizador continuado")
+#     # Simulate the pause and continue of the timer
+#     sleep(2)
+#     temporizador.pause_counter()
+#     print("Temporizador en pausa")
+#     sleep(4)
+#     temporizador.continue_counter()
+#     print("Temporizador continuado")
 
-    t.join()
-    start_time, diff_time, end_time = temporizador.stop_counter()
-    paused_time = temporizador.paused_time_total
-    paused_time_str = str(paused_time).split(".")[0]
-    df = temporizador.create_DataFrame(start_time, diff_time, end_time, paused_time_str)
-    temporizador.export_data_to_excel(df)
-except Exception as e:
-    print(e)
+#     t.join()
+#     start_time, diff_time, end_time = temporizador.stop_counter()
+#     paused_time = temporizador.paused_time_total
+#     paused_time_str = str(paused_time).split(".")[0]
+#     df = temporizador.create_DataFrame(start_time, diff_time, end_time, paused_time_str)
+#     temporizador.export_data_to_excel(df)
+# except Exception as e:
+#     print(e)
