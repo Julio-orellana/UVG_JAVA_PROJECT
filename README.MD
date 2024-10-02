@@ -1,7 +1,7 @@
 # PROYECTO FINAL POO
 
 ## Integrantes:
-- **Ricardo Rodriguez**
+- **Ricardo Rodriguez 18907**
 - **Julio Orellana**
 - **Sofia Batz* - 241281**
 - **Ginebra Estrada**
