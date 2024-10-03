@@ -1,5 +1,7 @@
 package org.uvg.project.GestionProductos;
 
+import org.uvg.project.Exceptions.ProductException;
+
 /**
  * @author Ricardo Rodríguez
  * @version 1
@@ -22,14 +24,18 @@ class Producto
      * @param dimension Unidades en las que se mide el producto.
     */
 
-    public Producto(String id, String nombre, String tipo, float cantidad, String dimension, Ubicacion ubicacion, Categoria categoria)
+    public Producto(String id, String nombre, String tipo, float cantidad, String dimension, Ubicacion ubicacion, Categoria categoria) throws ProductException
     {
-        this.id = id;
-        this.nombre = nombre;
-        this.cantidad = cantidad;
-        this.dimension = dimension;
-        this.id_ubicacion = ubicacion.GetId();
-        this.id_categoria = categoria.GetID();
+        if (id != null || nombre != null || tipo != null || dimension != null || ubicacion != null || categoria != null)
+        {
+            this.id = id;
+            this.nombre = nombre;
+            this.cantidad = cantidad;
+            this.dimension = dimension;
+            this.id_ubicacion = ubicacion.GetId();
+            this.id_categoria = categoria.GetID();
+        }
+            throw new ProductException("No se pueden ingresar valores nulos");
     }
 
     /**
@@ -124,11 +130,14 @@ class Producto
 
 
 
-    public void RebajarSalida(float cantidad_descontada)
-    {
+    public void RebajarSalida(float cantidad_descontada) throws ProductException {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_descontada = Math.round(cantidad_descontada);
+        }
+        else
+        {
+            throw new ProductException("No se pueden rebajar productos que no sean de tipo unidad");
         }
 
         if (cantidad_descontada < 0 || CorroborarSalida(cantidad_descontada) == false)
@@ -141,11 +150,14 @@ class Producto
 
 
 
-    public void AumentarExistencias(float cantidad_aumentar)
-    {
+    public void AumentarExistencias(float cantidad_aumentar) throws ProductException {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_aumentar = Math.round(cantidad_aumentar);
+        }
+        else
+        {
+            throw new ProductException("No se pueden aumentar productos que no sean de tipo unidad");
         }
 
         if (cantidad_aumentar < 0)
