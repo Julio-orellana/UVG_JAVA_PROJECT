@@ -1,4 +1,4 @@
-package org.uvg.project.Gestion
+package org.uvg.project.GestionProductos;
 
 /**
  * @author Ricardo Rodríguez
