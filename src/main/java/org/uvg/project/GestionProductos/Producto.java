@@ -1,6 +1,11 @@
 package org.uvg.project.GestionProductos;
 
+import org.uvg.project.Exceptions.DBException;
 import org.uvg.project.Exceptions.ProductException;
+import org.uvg.project.db.CRUD;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ricardo Rodríguez
@@ -8,14 +13,16 @@ import org.uvg.project.Exceptions.ProductException;
  * Clase para simular al programador
  */
 
-class Producto
+public class Producto
 {
-    protected String id;
+    protected int id;
     protected String nombre;
     protected float cantidad;
     protected String dimension;
+    protected int storage_id;
     protected int id_ubicacion;
     protected String id_categoria;
+    protected static CRUD CRUD;
 
     /**
      * @param id Identificador del producto.
@@ -24,18 +31,40 @@ class Producto
      * @param dimension Unidades en las que se mide el producto.
     */
 
-    public Producto(String id, String nombre, String tipo, float cantidad, String dimension, Ubicacion ubicacion, Categoria categoria) throws ProductException
+    public Producto(int id, String nombre, String tipo, float cantidad, String dimension, Ubicacion ubicacion, Categoria categoria) throws ProductException
     {
-        if (id != null || nombre != null || tipo != null || dimension != null || ubicacion != null || categoria != null)
-        {
-            this.id = id;
-            this.nombre = nombre;
-            this.cantidad = cantidad;
-            this.dimension = dimension;
-            this.id_ubicacion = ubicacion.GetId();
-            this.id_categoria = categoria.GetID();
-        }
+        try {
+            if (id <= 0 || nombre != null || tipo != null || dimension != null || ubicacion != null || categoria != null) {
+                this.id = id;
+                this.nombre = nombre;
+                this.cantidad = cantidad;
+                this.dimension = dimension;
+                this.id_ubicacion = ubicacion.GetId();
+                this.id_categoria = categoria.GetID();
+                this.CRUD = new CRUD();
+            }
+        } catch (DBException | NullPointerException e) {
             throw new ProductException("No se pueden ingresar valores nulos");
+        }
+    }
+
+    // Nuevo constructor para la clase Producto
+    public Producto(int id, String nombre, float cantidad, String dimension, int storage_id, int id_ubicacion) throws ProductException
+    {
+        try {
+            if (id <= 0 || nombre != null || dimension != null || id_ubicacion <= 0 || storage_id <= 0)
+            {
+                this.id = id;
+                this.nombre = nombre;
+                this.cantidad = cantidad;
+                this.dimension = dimension;
+                this.id_ubicacion = id_ubicacion;
+                this.storage_id = storage_id;
+                this.CRUD = new CRUD();
+            }
+        } catch (DBException | NullPointerException e) {
+            throw new ProductException("No se pueden ingresar valores nulos");
+        }
     }
 
     /**
@@ -144,7 +173,7 @@ class Producto
         {
             cantidad_descontada = 0f;
         }
-        
+
         this.SetCantidad((float) this.GetCantidad() - cantidad_descontada);
     }
 
@@ -164,8 +193,70 @@ class Producto
         {
             cantidad_aumentar = 0f;
         }
-        
+
         this.SetCantidad((float) this.GetCantidad() + cantidad_aumentar);
+    }
+
+
+    // CRUD
+
+    // CREATE
+    public static void saveProduct(Producto producto) throws ProductException {
+        try {
+            String insertQuery = "INSERT INTO products ('name', 'quantity', 'dimension', 'storage_id', 'location_id') VALUES ('" + this.nombre + "', " + this.cantidad + ", '" + this.dimension + "', " + this.storage_id + ", " + this.id_ubicacion + ")";
+            CRUD.setQuery(insertQuery);
+            CRUD.saveObject(producto);
+        } catch (DBException e) {
+            throw new ProductException("PROBLEMA EN SAVE PRODUCT: " + e.getMessage());
+        }
+    }
+
+    // READ
+    public static ArrayList<Producto> getProducts() throws ProductException {
+        ArrayList<Producto> products = new ArrayList<>();
+        try {
+            String selectQuery = "SELECT * FROM products";
+            CRUD.setQuery(selectQuery);
+            List<Object> lista = CRUD.getObjects();
+            for (int i = 0; i < lista.size(); i += 6) {
+                products.add(new Producto((int) lista.get(i), (String) lista.get(i + 1), (float) lista.get(i + 2), (String) lista.get(i + 3), (int) lista.get(i + 4), (int) lista.get(i + 5)));
+            }
+            return products;
+        } catch (DBException e) {
+            throw new ProductException("PROBLEMA EN GET PRODUCTS: " + e.getMessage());
+        }
+    }
+
+    // UPDATE
+    public static void updateProduct (Producto producto) throws ProductException {
+        try {
+            String updateQuery = "UPDATE products SET name = '"+ producto.getNombre() +"', quantity = "+ producto.getCantidad() +", dimension = '"+ producto.getDimension() +"', storage_id = "+ producto.getStorageId() +", location_id = "+ producto.getIdUbicacion() +" WHERE id = "+ producto.getId();
+            CRUD.updateObject(updateQuery);
+        } catch (DBException e) {
+            throw new ProductException("PROBLEMA EN UPDATE PRODUCT: " + e.getMessage());
+        }
+    }
+
+    // DELETE
+    public static void deleteProduct (Producto producto) throws ProductException {
+        try {
+            String deleteQuery = "DELETE FROM products WHERE id = "+ producto.getId();
+            CRUD.setQuery(deleteQuery);
+            CRUD.deleteObject(producto);
+        } catch (DBException e) {
+            throw new ProductException("PROBLEMA EN DELETE PRODUCT: " + e.getMessage());
+        }
+    }
+
+    // DELETE BY ID
+    public static void deleteProduct (int id) throws ProductException {
+        try {
+            String deleteQuery = "DELETE FROM products WHERE id = "+ id;
+            CRUD.setQuery(deleteQuery);
+            CRUD.deleteObjectById();
+        } catch (DBException e) {
+            throw new ProductException("PROBLEMA EN DELETE PRODUCT: " + e.getMessage());
+        }
     }
 
 
