@@ -2,8 +2,8 @@
 
 ## Integrantes:
 - **Ricardo Rodriguez 18907**
-- **Julio Orellana**
-- **Sofia Batz* - 241281**
+- **Julio Orellana - 24207**
+- **Sofia Batz - 241281**
 - **Ginebra Estrada**
 
 

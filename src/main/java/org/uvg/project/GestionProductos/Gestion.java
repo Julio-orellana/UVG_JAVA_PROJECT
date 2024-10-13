@@ -1,4 +1,9 @@
+<<<<<<< HEAD:src/main/java/org/uvg/project/Gestion productos/Gestion.java
 package org.uvg.project.Gestion
+=======
+package org.uvg.project.GestionProductos;
+
+>>>>>>> a47d511971f0c805de03ad7688263377d7b343b0:src/main/java/org/uvg/project/GestionProductos/Gestion.java
 /**
  * @author Ricardo Rodríguez
  * @version 1
