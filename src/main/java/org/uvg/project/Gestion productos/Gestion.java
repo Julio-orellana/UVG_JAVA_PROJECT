@@ -1,4 +1,5 @@
-package org.uvg.project.Gestion /**
+package org.uvg.project.Gestion
+/**
  * @author Ricardo Rodríguez
  * @version 1
  * Clase para simular al programador
@@ -32,7 +33,7 @@ class Gestion
         
         for (Producto producto : productos)
         {
-            id_producto.add(producto.GetId());
+            id_producto.add(producto.getid());
         }
 
         if (tipo.equals("Compras") || tipo.equals("Entradas"))
@@ -56,7 +57,7 @@ class Gestion
     {
         for (int i = 0; i < productos.size(); i++)
         {
-            productos.get(i).RebajarSalida(cantidades.get(i));
+            productos.get(i).rebajarsalida(cantidades.get(i));
         }
     }
 
@@ -69,7 +70,7 @@ class Gestion
     {
         for (int i = 0; i < productos.size(); i++)
         {
-            productos.get(i).AumentarExistencias(cantidades.get(i));
+            productos.get(i).aumentarexistencias(cantidades.get(i));
         }
     }
 }

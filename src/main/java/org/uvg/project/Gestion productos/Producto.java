@@ -36,7 +36,7 @@ class Producto
      * @param nombre Nombre del producto.
     */
 
-    public void SetNombre(String nombre)
+    public void setnombre(String nombre)
     {
         this.nombre = nombre;
     }
@@ -45,7 +45,7 @@ class Producto
      * @param cantidad Cantidad de existencias del producto.
     */
 
-    public void SetCantidad(float cantidad)
+    public void setcantidad(float cantidad)
     {
         this.cantidad = cantidad;
     }
@@ -54,7 +54,7 @@ class Producto
      * @param dimension Unidades en las que se mide el producto.
     */
 
-    public void SetDimension(String dimension)
+    public void setdimension(String dimension)
     {
         this.dimension = dimension;
     }
@@ -63,7 +63,7 @@ class Producto
      * @param dimension Unidades en las que se mide el producto.
     */
 
-    public void SetUbicacion(int id_ubicacion)
+    public void setubicacion(int id_ubicacion)
     {
         this.id_ubicacion = id_ubicacion;
     }
@@ -72,7 +72,7 @@ class Producto
      * @param dimension Unidades en las que se mide el producto.
     */
 
-    public void SetCategoria(String id_categoria)
+    public void setcategoria(String id_categoria)
     {
         this.id_categoria = id_categoria;
     }
@@ -81,7 +81,7 @@ class Producto
      * @return ID del producto.
     */
 
-    public String GetId()
+    public String getid()
     {
         return this.id;
     }
@@ -90,7 +90,7 @@ class Producto
      * @return Nombre del producto.
     */
 
-    public String GetNombre()
+    public String setnombre()
     {
         return this.nombre;
     }
@@ -99,7 +99,7 @@ class Producto
      * @return Cantidad del producto.
     */
 
-    public float GetCantidad()
+    public float getcantidad()
     {
         return this.cantidad;
     }
@@ -108,7 +108,7 @@ class Producto
      * @return Dimensión con la que se cuantifica el producto.
     */
 
-    public String GetDimension()
+    public String getdimension()
     {
         return this.dimension;
     }
@@ -117,31 +117,36 @@ class Producto
      * @return Devuelve True si el producto se puede rebajar.
     */
 
-    public boolean CorroborarSalida(float cantidad_descontada)
+    public boolean corroborarsalida(float cantidad_descontada)
     {
         return cantidad_descontada > 0 & this.cantidad <= cantidad_descontada;
     }
 
 
+    /**
+     * @param cantidad_descontada Cantidad a descontar.
+    */
 
-    public void RebajarSalida(float cantidad_descontada)
+    public void rebajarsalida(float cantidad_descontada)
     {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_descontada = Math.round(cantidad_descontada);
         }
 
-        if (cantidad_descontada < 0 || CorroborarSalida(cantidad_descontada) == false)
+        if (cantidad_descontada < 0 || corroborarsalida(cantidad_descontada) == false)
         {
             cantidad_descontada = 0f;
         }
         
-        this.SetCantidad((float) this.GetCantidad() - cantidad_descontada);
+        this.setcantidad((float) this.getcantidad() - cantidad_descontada);
     }
 
+    /**
+     * @param cantidad_aumentar Cantidad a aumentar.
+    */
 
-
-    public void AumentarExistencias(float cantidad_aumentar)
+    public void aumentarexistencias(float cantidad_aumentar)
     {
         if (this.dimension.equals("Unidad"))
         {
@@ -153,7 +158,7 @@ class Producto
             cantidad_aumentar = 0f;
         }
         
-        this.SetCantidad((float) this.GetCantidad() + cantidad_aumentar);
+        this.setcantidad((float) this.getcantidad() + cantidad_aumentar);
     }
 
 
