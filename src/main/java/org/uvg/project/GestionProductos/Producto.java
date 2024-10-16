@@ -2,6 +2,7 @@ package org.uvg.project.GestionProductos;
 
 import org.uvg.project.Exceptions.DBException;
 import org.uvg.project.Exceptions.ProductException;
+import org.uvg.project.Storage.Location;
 import org.uvg.project.db.CRUD;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Producto
     protected float cantidad;
     protected String dimension;
     protected int storage_id;
-    protected int id_ubicacion;
+    protected int location_id;
     protected String id_categoria;
     protected static CRUD CRUD;
 
@@ -29,18 +30,17 @@ public class Producto
      * @param nombre Nombre del producto.
      * @param cantidad Cantidad de existencias del producto.
      * @param dimension Unidades en las que se mide el producto.
-    */
-
+     */
     public Producto(int id, String nombre, String tipo, float cantidad, String dimension, Location location, Categoria categoria) throws ProductException
     {
         try {
-            if (id <= 0 || nombre != null || tipo != null || dimension != null || loation != null || categoria != null) {
+            if (id <= 0 || nombre != null || tipo != null || dimension != null || location != null || categoria != null) {
                 this.id = id;
                 this.nombre = nombre;
                 this.cantidad = cantidad;
                 this.dimension = dimension;
-                this.id_ubicacion = location.getId();
-                this.id_categoria = categoria.getID();
+                this.location_id = location.getId();
+                this.id_categoria = categoria.getId();
                 this.CRUD = new CRUD();
             }
         } catch (DBException | NullPointerException e) {
@@ -58,7 +58,7 @@ public class Producto
                 this.nombre = nombre;
                 this.cantidad = cantidad;
                 this.dimension = dimension;
-                this.id_ubicacion = id_ubicacion;
+                this.location_id = id_ubicacion;
                 this.storage_id = storage_id;
                 this.CRUD = new CRUD();
             }
@@ -69,53 +69,47 @@ public class Producto
 
     /**
      * @param nombre Nombre del producto.
-    */
-
-    public void SetNombre(String nombre)
+     */
+    public void setNombre(String nombre)
     {
         this.nombre = nombre;
     }
 
     /**
      * @param cantidad Cantidad de existencias del producto.
-    */
-
-    public void SetCantidad(float cantidad)
+     */
+    public void setCantidad(float cantidad)
     {
         this.cantidad = cantidad;
     }
 
     /**
      * @param dimension Unidades en las que se mide el producto.
-    */
-
-    public void SetDimension(String dimension)
+     */
+    public void setDimension(String dimension)
     {
         this.dimension = dimension;
     }
 
     /**
-     * @param dimension Unidades en las que se mide el producto.
-    */
-
-    public void SetUbicacion(int id_ubicacion)
+     * @param id_ubicacion ID de la ubicación.
+     */
+    public void setUbicacion(int id_ubicacion)
     {
-        this.id_ubicacion = id_ubicacion;
+        this.location_id = id_ubicacion;
     }
 
     /**
-     * @param dimension Unidades en las que se mide el producto.
-    */
-
-    public void SetCategoria(String id_categoria)
+     * @param id_categoria ID de la categoría.
+     */
+    public void setCategoria(String id_categoria)
     {
         this.id_categoria = id_categoria;
     }
 
     /**
      * @return ID del producto.
-    */
-
+     */
     public int getId()
     {
         return this.id;
@@ -123,8 +117,7 @@ public class Producto
 
     /**
      * @return Nombre del producto.
-    */
-
+     */
     public String getNombre()
     {
         return this.nombre;
@@ -132,8 +125,7 @@ public class Producto
 
     /**
      * @return Cantidad del producto.
-    */
-
+     */
     public float getCantidad()
     {
         return this.cantidad;
@@ -141,8 +133,7 @@ public class Producto
 
     /**
      * @return Dimensión con la que se cuantifica el producto.
-    */
-
+     */
     public String getDimension()
     {
         return this.dimension;
@@ -150,16 +141,13 @@ public class Producto
 
     /**
      * @return Devuelve True si el producto se puede rebajar.
-    */
-
-    public boolean CorroborarSalida(float cantidad_descontada)
+     */
+    public boolean corroborarSalida(float cantidad_descontada)
     {
-        return cantidad_descontada > 0 & this.cantidad <= cantidad_descontada;
+        return cantidad_descontada > 0 && this.cantidad >= cantidad_descontada;
     }
 
-
-
-    public void RebajarSalida(float cantidad_descontada) throws ProductException {
+    public void rebajarSalida(float cantidad_descontada) throws ProductException {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_descontada = Math.round(cantidad_descontada);
@@ -169,17 +157,15 @@ public class Producto
             throw new ProductException("No se pueden rebajar productos que no sean de tipo unidad");
         }
 
-        if (cantidad_descontada < 0 || CorroborarSalida(cantidad_descontada) == false)
+        if (cantidad_descontada < 0 || !corroborarSalida(cantidad_descontada))
         {
             cantidad_descontada = 0f;
         }
 
-        this.SetCantidad((float) this.getCantidad() - cantidad_descontada);
+        this.setCantidad(this.getCantidad() - cantidad_descontada);
     }
 
-
-
-    public void AumentarExistencias(float cantidad_aumentar) throws ProductException {
+    public void aumentarExistencias(float cantidad_aumentar) throws ProductException {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_aumentar = Math.round(cantidad_aumentar);
@@ -194,16 +180,23 @@ public class Producto
             cantidad_aumentar = 0f;
         }
 
-        this.SetCantidad((float) this.getCantidad() + cantidad_aumentar);
+        this.setCantidad(this.getCantidad() + cantidad_aumentar);
     }
 
+    public int getStorageId() {
+        return this.storage_id;
+    }
+
+    public int getLocationId() {
+        return this.location_id;
+    }
 
     // CRUD
 
     // CREATE
     public static void saveProduct(Producto producto) throws ProductException {
         try {
-            String insertQuery = "INSERT INTO products ('name', 'quantity', 'dimension', 'storage_id', 'location_id') VALUES ('" + this.nombre + "', " + this.cantidad + ", '" + this.dimension + "', " + this.storage_id + ", " + this.id_ubicacion + ")";
+            String insertQuery = "INSERT INTO products ('name', 'quantity', 'dimension', 'storage_id', 'location_id') VALUES ('" + producto.getNombre() + "', " + producto.getCantidad() + ", '" + producto.getDimension() + "', " + producto.getStorageId() + ", " + producto.getLocationId() + ")";
             CRUD.setQuery(insertQuery);
             CRUD.saveObject(producto);
         } catch (DBException e) {
@@ -230,7 +223,7 @@ public class Producto
     // UPDATE
     public static void updateProduct (Producto producto) throws ProductException {
         try {
-            String updateQuery = "UPDATE products SET name = '"+ producto.getNombre() +"', quantity = "+ producto.getCantidad() +", dimension = '"+ producto.getDimension() +"', storage_id = "+ producto.getStorageId() +", location_id = "+ producto.getIdUbicacion() +" WHERE id = "+ producto.getId();
+            String updateQuery = "UPDATE products SET name = '"+ producto.getNombre() +"', quantity = "+ producto.getCantidad() +", dimension = '"+ producto.getDimension() +"', storage_id = "+ producto.getStorageId() +", location_id = "+ producto.getLocationId() +" WHERE id = "+ producto.getId();
             CRUD.updateObject(updateQuery);
         } catch (DBException e) {
             throw new ProductException("PROBLEMA EN UPDATE PRODUCT: " + e.getMessage());
@@ -258,6 +251,5 @@ public class Producto
             throw new ProductException("PROBLEMA EN DELETE PRODUCT: " + e.getMessage());
         }
     }
-
 
 }

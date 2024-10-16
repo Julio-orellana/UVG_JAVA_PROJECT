@@ -2,8 +2,11 @@ package org.uvg.project.db;
 
 import org.uvg.project.Exceptions.DBException;
 import org.uvg.project.GestionProductos.Producto;
+import org.uvg.project.Storage.Location;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,23 +15,25 @@ public class CRUD extends DBManager implements ICRUD {
     private String query;
 
     public CRUD() throws DBException {
-            super();
+        super();
     }
 
     @Override
     public void saveObject(Object obj) throws DBException {
         try {
+            Statement stmt = getStatement();
             executeUpdate(query);
-        } catch (DBException e) {
+        } catch (DBException  e) {
             throw new DBException("PROBLEMA EN SAVE PRODUCT: " + e.getMessage());
         }
     }
 
     @Override
     public List<Object> getObjects() throws DBException {
-        getResultSet(query);
+        Statement stmt = getStatement();
         List<Object> list = new ArrayList<>();
         try {
+            ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
                     list.add(rs.getObject(i));
@@ -46,8 +51,15 @@ public class CRUD extends DBManager implements ICRUD {
             try {
                 executeUpdate(query);
             } catch (DBException e) {
-               throw new DBException("ERROR AL ACTUALIZAR EL PRDUCTO: " + e.getMessage());
+                throw new DBException("ERROR AL ACTUALIZAR EL PRDUCTO: " + e.getMessage());
             }
+        } else if (obj instanceof Location){
+            try {
+                executeUpdate(query);
+            } catch (DBException e) {
+                throw new DBException("ERROR AL ACTUALIZAR LA UBICACION: " + e.getMessage());
+            }
+
         }
     }
 
@@ -58,6 +70,13 @@ public class CRUD extends DBManager implements ICRUD {
                 executeUpdate(query);
             } catch (DBException e) {
                 throw new DBException("ERROR AL ElIMINAR EL PRDUCTO: " + e.getMessage());
+            }
+        }
+        else if (obj instanceof Location){
+            try {
+                executeUpdate(query);
+            } catch (DBException e) {
+                throw new DBException("ERROR AL ELIMINAR LA UBICACION: " + e.getMessage());
             }
         }
     }
