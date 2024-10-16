@@ -1,3 +1,5 @@
+package org.uvg.project.GestionProductos;
+
 public class Categoria {
     private int id;
     private String nombre;
