@@ -40,7 +40,7 @@ public class Producto
                 this.cantidad = cantidad;
                 this.dimension = dimension;
                 this.location_id = location.getId();
-                this.id_categoria = categoria.getID();
+                this.id_categoria = categoria.getId();
                 this.CRUD = new CRUD();
             }
         } catch (DBException | NullPointerException e) {
