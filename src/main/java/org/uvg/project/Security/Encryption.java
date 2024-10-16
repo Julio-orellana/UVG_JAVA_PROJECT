@@ -15,7 +15,7 @@ public class Encryption implements ILoadEnv {
 
     public Encryption(){}
 
-    private SecretKeySpec createKey() throws SecurityException {
+    private static SecretKeySpec createKey() throws SecurityException {
         try {
             byte[] bytesArray = encryptionKey.getBytes(StandardCharsets.UTF_8);
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -28,7 +28,7 @@ public class Encryption implements ILoadEnv {
         }
     }
 
-    public String encrypt(String text) throws SecurityException {
+    public static String encrypt(String text) throws SecurityException {
 
         try {
             SecretKeySpec secretKeySpec = createKey();
@@ -47,7 +47,7 @@ public class Encryption implements ILoadEnv {
 
     }
 
-    public String decrypt(String text) throws SecurityException {
+    public static String decrypt(String text) throws SecurityException {
 
         try {
             SecretKeySpec secretKeySpec = createKey();
