@@ -30,7 +30,8 @@ public class Producto
      * @param nombre Nombre del producto.
      * @param cantidad Cantidad de existencias del producto.
      * @param dimension Unidades en las que se mide el producto.
-     */
+    */
+
     public Producto(int id, String nombre, String tipo, float cantidad, String dimension, Location location, Categoria categoria) throws ProductException
     {
         try {
@@ -40,7 +41,7 @@ public class Producto
                 this.cantidad = cantidad;
                 this.dimension = dimension;
                 this.location_id = location.getId();
-                this.id_categoria = categoria.getId();
+                this.id_categoria = categoria.getID();
                 this.CRUD = new CRUD();
             }
         } catch (DBException | NullPointerException e) {
@@ -69,47 +70,53 @@ public class Producto
 
     /**
      * @param nombre Nombre del producto.
-     */
-    public void setNombre(String nombre)
+    */
+
+    public void SetNombre(String nombre)
     {
         this.nombre = nombre;
     }
 
     /**
      * @param cantidad Cantidad de existencias del producto.
-     */
-    public void setCantidad(float cantidad)
+    */
+
+    public void SetCantidad(float cantidad)
     {
         this.cantidad = cantidad;
     }
 
     /**
      * @param dimension Unidades en las que se mide el producto.
-     */
-    public void setDimension(String dimension)
+    */
+
+    public void SetDimension(String dimension)
     {
         this.dimension = dimension;
     }
 
     /**
-     * @param id_ubicacion ID de la ubicación.
-     */
-    public void setUbicacion(int id_ubicacion)
+     * @param dimension Unidades en las que se mide el producto.
+    */
+
+    public void SetUbicacion(int id_ubicacion)
     {
         this.location_id = id_ubicacion;
     }
 
     /**
-     * @param id_categoria ID de la categoría.
-     */
-    public void setCategoria(String id_categoria)
+     * @param dimension Unidades en las que se mide el producto.
+    */
+
+    public void SetCategoria(String id_categoria)
     {
         this.id_categoria = id_categoria;
     }
 
     /**
      * @return ID del producto.
-     */
+    */
+
     public int getId()
     {
         return this.id;
@@ -117,7 +124,8 @@ public class Producto
 
     /**
      * @return Nombre del producto.
-     */
+    */
+
     public String getNombre()
     {
         return this.nombre;
@@ -125,7 +133,8 @@ public class Producto
 
     /**
      * @return Cantidad del producto.
-     */
+    */
+
     public float getCantidad()
     {
         return this.cantidad;
@@ -133,7 +142,8 @@ public class Producto
 
     /**
      * @return Dimensión con la que se cuantifica el producto.
-     */
+    */
+
     public String getDimension()
     {
         return this.dimension;
@@ -141,13 +151,16 @@ public class Producto
 
     /**
      * @return Devuelve True si el producto se puede rebajar.
-     */
-    public boolean corroborarSalida(float cantidad_descontada)
+    */
+
+    public boolean CorroborarSalida(float cantidad_descontada)
     {
-        return cantidad_descontada > 0 && this.cantidad >= cantidad_descontada;
+        return cantidad_descontada > 0 & this.cantidad <= cantidad_descontada;
     }
 
-    public void rebajarSalida(float cantidad_descontada) throws ProductException {
+
+
+    public void RebajarSalida(float cantidad_descontada) throws ProductException {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_descontada = Math.round(cantidad_descontada);
@@ -157,15 +170,17 @@ public class Producto
             throw new ProductException("No se pueden rebajar productos que no sean de tipo unidad");
         }
 
-        if (cantidad_descontada < 0 || !corroborarSalida(cantidad_descontada))
+        if (cantidad_descontada < 0 || CorroborarSalida(cantidad_descontada) == false)
         {
             cantidad_descontada = 0f;
         }
 
-        this.setCantidad(this.getCantidad() - cantidad_descontada);
+        this.SetCantidad((float) this.GetCantidad() - cantidad_descontada);
     }
 
-    public void aumentarExistencias(float cantidad_aumentar) throws ProductException {
+
+
+    public void AumentarExistencias(float cantidad_aumentar) throws ProductException {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_aumentar = Math.round(cantidad_aumentar);
@@ -180,7 +195,7 @@ public class Producto
             cantidad_aumentar = 0f;
         }
 
-        this.setCantidad(this.getCantidad() + cantidad_aumentar);
+        this.SetCantidad((float) this.GetCantidad() + cantidad_aumentar);
     }
 
     public int getStorageId() {
@@ -190,6 +205,7 @@ public class Producto
     public int getLocationId() {
         return this.location_id;
     }
+
 
     // CRUD
 
@@ -251,5 +267,6 @@ public class Producto
             throw new ProductException("PROBLEMA EN DELETE PRODUCT: " + e.getMessage());
         }
     }
+
 
 }
