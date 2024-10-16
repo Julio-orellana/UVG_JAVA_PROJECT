@@ -1,9 +1,3 @@
-<<<<<<< HEAD:src/main/java/org/uvg/project/Gestion productos/Gestion.java
-package org.uvg.project.Gestion
-=======
-package org.uvg.project.GestionProductos;
-
->>>>>>> a47d511971f0c805de03ad7688263377d7b343b0:src/main/java/org/uvg/project/GestionProductos/Gestion.java
 /**
  * @author Ricardo Rodríguez
  * @version 1
@@ -14,7 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 class Gestion
-{   
+{
     private String id;
     private String tipo;
     private LocalDate fecha;
@@ -25,7 +19,7 @@ class Gestion
     /**
      * @param cantidad_descontada Cantidad a descontar.
      * @param producto Producto al cual se le descontarán existencias
-    */
+     */
 
     public Gestion(String id, String tipo, LocalDate fecha, ArrayList<Producto> productos, ArrayList<Float> cantidades, Empleado empleado)
     {
@@ -35,7 +29,7 @@ class Gestion
         this.cantidades = cantidades;
         this.id_empleado = empleado.GetId();
         ArrayList<String> id_producto = new ArrayList<>();
-        
+
         for (Producto producto : productos)
         {
             id_producto.add(producto.getid());
@@ -56,7 +50,7 @@ class Gestion
     /**
      * @param cantidad_descontada Cantidad a descontar.
      * @param producto Producto al cual se le descontarán existencias
-    */
+     */
 
     public final void Salidas(ArrayList<Float> cantidades, ArrayList<Producto> productos)
     {
@@ -69,7 +63,7 @@ class Gestion
     /**
      * @param cantidad_aumentar Cantidad a aumentar.
      * @param producto Producto al cual se le aumentará existencias.
-    */
+     */
 
     public final void Entradas(ArrayList<Float> cantidades, ArrayList<Producto> productos)
     {

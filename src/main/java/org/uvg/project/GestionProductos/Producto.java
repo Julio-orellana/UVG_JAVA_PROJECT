@@ -31,16 +31,16 @@ public class Producto
      * @param dimension Unidades en las que se mide el producto.
     */
 
-    public Producto(int id, String nombre, String tipo, float cantidad, String dimension, Ubicacion ubicacion, Categoria categoria) throws ProductException
+    public Producto(int id, String nombre, String tipo, float cantidad, String dimension, Location location, Categoria categoria) throws ProductException
     {
         try {
-            if (id <= 0 || nombre != null || tipo != null || dimension != null || ubicacion != null || categoria != null) {
+            if (id <= 0 || nombre != null || tipo != null || dimension != null || loation != null || categoria != null) {
                 this.id = id;
                 this.nombre = nombre;
                 this.cantidad = cantidad;
                 this.dimension = dimension;
-                this.id_ubicacion = ubicacion.GetId();
-                this.id_categoria = categoria.GetID();
+                this.id_ubicacion = location.getId();
+                this.id_categoria = categoria.getID();
                 this.CRUD = new CRUD();
             }
         } catch (DBException | NullPointerException e) {
@@ -116,7 +116,7 @@ public class Producto
      * @return ID del producto.
     */
 
-    public String GetId()
+    public int getId()
     {
         return this.id;
     }
@@ -125,7 +125,7 @@ public class Producto
      * @return Nombre del producto.
     */
 
-    public String GetNombre()
+    public String getNombre()
     {
         return this.nombre;
     }
@@ -134,7 +134,7 @@ public class Producto
      * @return Cantidad del producto.
     */
 
-    public float GetCantidad()
+    public float getCantidad()
     {
         return this.cantidad;
     }
@@ -143,7 +143,7 @@ public class Producto
      * @return Dimensión con la que se cuantifica el producto.
     */
 
-    public String GetDimension()
+    public String getDimension()
     {
         return this.dimension;
     }
@@ -174,7 +174,7 @@ public class Producto
             cantidad_descontada = 0f;
         }
 
-        this.SetCantidad((float) this.GetCantidad() - cantidad_descontada);
+        this.SetCantidad((float) this.getCantidad() - cantidad_descontada);
     }
 
 
@@ -194,7 +194,7 @@ public class Producto
             cantidad_aumentar = 0f;
         }
 
-        this.SetCantidad((float) this.GetCantidad() + cantidad_aumentar);
+        this.SetCantidad((float) this.getCantidad() + cantidad_aumentar);
     }
 
 
