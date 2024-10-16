@@ -22,7 +22,7 @@ public class Producto
     protected String dimension;
     protected int storage_id;
     protected int location_id;
-    protected String id_categoria;
+    protected int id_categoria;
     protected static CRUD CRUD;
 
     /**
