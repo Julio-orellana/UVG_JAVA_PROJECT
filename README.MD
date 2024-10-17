@@ -29,3 +29,5 @@ Para correr el programa:
 3. Crear un archivo `.env` con las variables de entorno del proyecto (ver archivo `.env.example` para referencia)
 4. Ejecutar el comando `mvn package` para instalar todas ls dependencias del sistema 
 5. Correr el programa en el boton play de la IDE desde el archivo `App.java`
+
+## Documentacion del proyecto:
