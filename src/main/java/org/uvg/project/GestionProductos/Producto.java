@@ -4,6 +4,7 @@ import org.uvg.project.Exceptions.DBException;
 import org.uvg.project.Exceptions.ProductException;
 import org.uvg.project.Storage.Location;
 import org.uvg.project.db.CRUD;
+import org.uvg.project.db.DBManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,9 @@ import java.util.List;
 
 public class Producto
 {
-    protected int id;
+    protected static int id;
     protected String nombre;
-    protected float cantidad;
+    protected int cantidad;
     protected String dimension;
     protected int storage_id;
     protected int location_id;
@@ -31,7 +32,7 @@ public class Producto
      * @param cantidad Cantidad de existencias del producto.
      * @param dimension Unidades en las que se mide el producto.
      */
-    public Producto(int id, String nombre, String tipo, float cantidad, String dimension, Location location, Categoria categoria) throws ProductException
+    public Producto(int id, String nombre, String tipo, int cantidad, String dimension, Location location, Categoria categoria) throws ProductException
     {
         try {
             if (id <= 0 || nombre != null || tipo != null || dimension != null || location != null || categoria != null) {
@@ -49,12 +50,31 @@ public class Producto
     }
 
     // Nuevo constructor para la clase Producto
-    public Producto(int id, String nombre, float cantidad, String dimension, int storage_id, int id_ubicacion) throws ProductException
+    public Producto(int id, String nombre, int cantidad, String dimension, int storage_id, int id_ubicacion) throws ProductException
     {
         try {
             if (id <= 0 || nombre != null || dimension != null || id_ubicacion <= 0 || storage_id <= 0)
             {
                 this.id = id;
+                this.nombre = nombre;
+                this.cantidad = cantidad;
+                this.dimension = dimension;
+                this.location_id = id_ubicacion;
+                this.storage_id = storage_id;
+                this.CRUD = new CRUD();
+            }
+        } catch (DBException | NullPointerException e) {
+            throw new ProductException("No se pueden ingresar valores nulos");
+        }
+    }
+
+    // Nuevo constructor para la clase Producto
+    public Producto(String nombre, int cantidad, String dimension, int storage_id, int id_ubicacion) throws ProductException
+    {
+        try {
+            if (nombre != null || dimension != null || id_ubicacion <= 0 || storage_id <= 0)
+            {
+                Producto.id++;
                 this.nombre = nombre;
                 this.cantidad = cantidad;
                 this.dimension = dimension;
@@ -78,7 +98,7 @@ public class Producto
     /**
      * @param cantidad Cantidad de existencias del producto.
      */
-    public void setCantidad(float cantidad)
+    public void setCantidad(int cantidad)
     {
         this.cantidad = cantidad;
     }
@@ -126,7 +146,7 @@ public class Producto
     /**
      * @return Cantidad del producto.
      */
-    public float getCantidad()
+    public int getCantidad()
     {
         return this.cantidad;
     }
@@ -147,30 +167,14 @@ public class Producto
         return cantidad_descontada > 0 && this.cantidad >= cantidad_descontada;
     }
 
-    public void rebajarSalida(float cantidad_descontada) {
-        if (this.dimension.equals("Unidad"))
-        {
-            cantidad_descontada = Math.round(cantidad_descontada);
-        }
+    public void rebajarSalida(int cantidad_descontada) {
 
-        if (cantidad_descontada < 0 || !corroborarSalida(cantidad_descontada))
-        {
-            cantidad_descontada = 0f;
-        }
 
         this.setCantidad(this.getCantidad() - cantidad_descontada);
     }
 
-    public void aumentarExistencias(float cantidad_aumentar) {
-        if (this.dimension.equals("Unidad"))
-        {
-            cantidad_aumentar = Math.round(cantidad_aumentar);
-        }
+    public void aumentarExistencias(int cantidad_aumentar) {
 
-        if (cantidad_aumentar < 0)
-        {
-            cantidad_aumentar = 0f;
-        }
 
         this.setCantidad(this.getCantidad() + cantidad_aumentar);
     }
@@ -188,7 +192,7 @@ public class Producto
     // CREATE
     public static void saveProduct(Producto producto) throws ProductException {
         try {
-            String insertQuery = "INSERT INTO products ('name', 'quantity', 'dimension', 'storage_id', 'location_id') VALUES ('" + producto.getNombre() + "', " + producto.getCantidad() + ", '" + producto.getDimension() + "', " + producto.getStorageId() + ", " + producto.getLocationId() + ")";
+            String insertQuery = "INSERT INTO products (name, quantity, dimension, storage_id, location_id) VALUES ('" + producto.getNombre() + "', " + producto.getCantidad() + ", '" + producto.getDimension() + "', " + producto.getStorageId() + ", " + producto.getLocationId() + ")";
             CRUD.setQuery(insertQuery);
             CRUD.saveObject(producto);
         } catch (DBException e) {
@@ -204,7 +208,7 @@ public class Producto
             CRUD.setQuery(selectQuery);
             List<Object> lista = CRUD.getObjects();
             for (int i = 0; i < lista.size(); i += 6) {
-                products.add(new Producto((int) lista.get(i), (String) lista.get(i + 1), (float) lista.get(i + 2), (String) lista.get(i + 3), (int) lista.get(i + 4), (int) lista.get(i + 5)));
+                products.add(new Producto((int) lista.get(i), (String) lista.get(i + 1), (int) lista.get(i + 2), (String) lista.get(i + 3), (int) lista.get(i + 4), (int) lista.get(i + 5)));
             }
             return products;
         } catch (DBException e) {
@@ -242,6 +246,19 @@ public class Producto
         } catch (DBException e) {
             throw new ProductException("PROBLEMA EN DELETE PRODUCT: " + e.getMessage());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", cantidad=" + cantidad +
+                ", dimension='" + dimension + '\'' +
+                ", storage_id=" + storage_id +
+                ", location_id=" + location_id +
+                ", id_categoria=" + id_categoria +
+                '}';
     }
 
 }
