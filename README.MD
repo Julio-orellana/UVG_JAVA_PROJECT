@@ -4,7 +4,7 @@
 - **Ricardo Rodriguez 18907**
 - **Julio Orellana - 24207**
 - **Sofia Batz - 241281**
-- **Ginebra Estrada**
+- **Ginebra Estrada - 24079**
 
 ## Estructuracion del repositorio:
 - La rama [main](https://github.com/Julio-orellana/UVG_JAVA_PROJECT/tree/main) contiene uno de los prototipos del proyecto
