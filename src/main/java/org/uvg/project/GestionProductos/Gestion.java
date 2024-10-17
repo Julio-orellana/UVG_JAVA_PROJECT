@@ -6,6 +6,8 @@ package org.uvg.project.GestionProductos;
  * Clase para simular al programador
  */
 
+import org.uvg.project.Users.Employee;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -14,14 +16,14 @@ public class Gestion {
     private String tipo;
     private LocalDate fecha;
     private ArrayList<Integer> identificadores;
-    private ArrayList<Float> cantidades;
+    private ArrayList<Integer> cantidades;
 
     /**
      * @param cantidad_descontada Cantidad a descontar.
      * @param producto            Producto al cual se le descontarán existencias
      */
 
-    public Gestion(String id, String tipo, LocalDate fecha, ArrayList<Producto> productos, ArrayList<Float> cantidades, Empleado empleado) {
+    public Gestion(String id, String tipo, LocalDate fecha, ArrayList<Producto> productos, ArrayList<Integer> cantidades, Employee empleado) {
         this.id = id;
         this.tipo = tipo;
         this.fecha = fecha;
@@ -47,7 +49,7 @@ public class Gestion {
      * @param producto            Producto al cual se le descontarán existencias
      */
 
-    public final void Salidas(ArrayList<Float> cantidades, ArrayList<Producto> productos) {
+    public final void Salidas(ArrayList<Integer> cantidades, ArrayList<Producto> productos) {
         for (int i = 0; i < productos.size(); i++) {
             productos.get(i).rebajarSalida(cantidades.get(i));
         }
@@ -58,7 +60,7 @@ public class Gestion {
      * @param producto          Producto al cual se le aumentará existencias.
      */
 
-    public final void Entradas(ArrayList<Float> cantidades, ArrayList<Producto> productos) {
+    public final void Entradas(ArrayList<Integer> cantidades, ArrayList<Producto> productos) {
         for (int i = 0; i < productos.size(); i++) {
             productos.get(i).aumentarExistencias(cantidades.get(i));
         }
