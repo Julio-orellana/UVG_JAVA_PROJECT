@@ -11,8 +11,6 @@ import org.uvg.project.db.DBManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
-
 
 public class Auth {
 
@@ -20,7 +18,7 @@ public class Auth {
 
     public static boolean signIn(String table, String email, String password) throws AuthException {
 
-        table.toLowerCase();
+        table = table.toLowerCase();
         table = table.equals("customers") || table.equals("employee") ? table : null;
         String correctPassword = null;
 
@@ -28,32 +26,38 @@ public class Auth {
 
             try {
                 Statement stmt = DBManager.getStatement();
-                ResultSet rs = stmt.executeQuery("SELECT password FROM " + table + " WHERE email = '" + email + "'");
-                correctPassword = Encryption.decrypt(rs.getString("password"));
+                ResultSet rs = stmt.executeQuery("SELECT password FROM " + table + " WHERE email = '" + email.toLowerCase() + "'");
 
-            } catch (SecurityException e){
+                // Verificar si el ResultSet tiene resultados
+                if (rs.next()) {
+                    // Si hay resultado, obtener la contraseña y desencriptarla
+//                    System.out.println(rs.getString("password"));
+                    correctPassword = Encryption.decrypt(rs.getString("password"));
+                } else {
+                    // Si no hay resultado, lanzar excepción porque el usuario no existe
+                    throw new AuthException("No se encontró el usuario con el email: " + email);
+                }
 
+            } catch (SecurityException e) {
                 throw new AuthException("Contraseña incorrecta");
-
-            } catch (SQLException | DBException e){
-
-                throw new AuthException("No se encontró el usuario" + email);
-
+            } catch (SQLException | DBException e) {
+                throw new AuthException("Error de base de datos: " + e.getMessage());
             }
 
         }
-        // Autorizar el acceso
+
+        // Autorizar el acceso comparando la contraseña desencriptada con la proporcionada
         return correctPassword != null && correctPassword.equals(password);
     }
 
-    public static boolean signUp(String table, String email, String name, char sex, Date birth, String password) throws AuthException {
+    public static boolean signUp(String table, String email, String name, char sex, String birth, String password) throws AuthException {
 
         table = table.toLowerCase();
         table = table.equals("customers") || table.equals("employee") ? table : null;
         email = email.toLowerCase();
         name = name.toLowerCase();
         sex = Character.toUpperCase(sex);
-        birth = birth.before(new Date()) ? birth : null;
+//        birth = birth.before(new Date()) ? birth : null;
 
         if (birth == null) throw new AuthException("La fecha de nacimiento no puede ser mayor a la fecha actual");
 
@@ -66,7 +70,7 @@ public class Auth {
 
             } catch (DBException | SQLException| SecurityException e) {
 
-                throw new AuthException("Ocurrio un error al registrarse, por favor intentelo de nuevo");
+                throw new AuthException("Ocurrio un error al registrarse, por favor intentelo de nuevo" + e.getMessage());
 
             }
 
