@@ -24,7 +24,7 @@ public class CRUD extends DBManager implements ICRUD {
             Statement stmt = getStatement();
             executeUpdate(query);
         } catch (DBException  e) {
-            throw new DBException("PROBLEMA EN SAVE PRODUCT: " + e.getMessage());
+            throw new DBException("PROBLEMA EN SAVE OBJECT: " + e.getMessage());
         }
     }
 

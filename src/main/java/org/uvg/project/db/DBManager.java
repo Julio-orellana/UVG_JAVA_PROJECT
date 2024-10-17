@@ -1,6 +1,5 @@
 package org.uvg.project.db;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import org.uvg.project.Exceptions.DBException;
 import org.uvg.project.utils.ILoadEnv;
 
