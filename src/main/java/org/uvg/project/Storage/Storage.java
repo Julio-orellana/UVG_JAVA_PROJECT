@@ -45,11 +45,10 @@ public class Storage {
     public static Storage loadStorage(int id) throws StorageException {
         try {
             Statement stmt = DBManager.getStatement();
-            String query = "SELECT * FROM locations WHERE storage_id = "+ id ;
+            String query = "SELECT * FROM locations WHERE storage_id = " + id;
             ResultSet rs = stmt.executeQuery(query);
 
             ArrayList<Location> locations = new ArrayList<>();
-            ArrayList<Producto> products = new ArrayList<>();
             Storage storage = null;
 
             // Cargar las ubicaciones del almacen
@@ -62,12 +61,13 @@ public class Storage {
 
             // Cargar los productos de cada ubicación
             for (Location location : locations) {
+                ArrayList<Producto> products = new ArrayList<>();  // Inicializa una nueva lista de productos
                 query = "SELECT * FROM products WHERE location_id = " + location.getId();
                 rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     int prod_id = rs.getInt("id");
                     String prod_name = rs.getString("name");
-                    float quantity = rs.getFloat("quantity");
+                    int quantity = rs.getInt("quantity");
                     String dimension = rs.getString("dimension");
                     int storage_id = rs.getInt("storage_id");
                     int location_id = rs.getInt("location_id");
@@ -79,12 +79,12 @@ public class Storage {
             // Cargar el almacen
             query = "SELECT * FROM storage WHERE id = " + id;
             rs = stmt.executeQuery(query);
-            while (rs.next()) {
+            if (rs.next()) {
                 int storage_id = rs.getInt("id");
                 String storage_name = rs.getString("name");
                 storage = new Storage(storage_id, storage_name);
                 for (Location location : locations) {
-                    storage.addLocation(location);
+                    storage.addLocation(location);  // Agrega la ubicación al almacen
                 }
             }
 
@@ -95,13 +95,13 @@ public class Storage {
         }
     }
 
-    public void saveStorage() throws StorageException {
+    public static void saveStorage(Storage storage) throws StorageException {
         try {
             Connection conn = DBManager.getConnection();
             Statement stmt = conn.createStatement();
-            String query = "INSERT INTO storage (id, name) VALUES (" + this.id + ", '" + this.name + "')";
+            String query = "INSERT INTO storage (name) VALUES ('" + storage.getName() + "')";
             stmt.executeUpdate(query);
-            for (Location location : this.locations.values()) {
+            for (Location location : storage.getLocations()) {
                 Location.saveLocation(location);
             }
         } catch (Exception e) {

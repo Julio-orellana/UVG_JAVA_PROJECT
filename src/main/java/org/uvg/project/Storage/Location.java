@@ -28,6 +28,7 @@ public class Location {
         }
     }
 
+
     public void addProduct(Producto product) {
         this.products.add(product);
     }
@@ -129,6 +130,21 @@ public class Location {
         } catch (DBException e) {
             throw new LocationException("PROBLEMA EN DELETE PRODUCT: " + e.getMessage());
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nUbicación: " + name);
+        sb.append("\nId de ubicación: " + id);
+        sb.append("\nId de almacen: " + storageId);
+        sb.append("\nProductos: ");
+        for (Producto product : products) {
+            sb.append("     \nProducto: " + product.getNombre());
+            sb.append("     \nId de producto: " + product.getId());
+            sb.append("     \nCantidad: " + product.getCantidad()).append("\n");
+        }
+        return sb.toString();
     }
 
 }
