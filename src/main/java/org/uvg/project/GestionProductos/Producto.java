@@ -147,14 +147,10 @@ public class Producto
         return cantidad_descontada > 0 && this.cantidad >= cantidad_descontada;
     }
 
-    public void rebajarSalida(float cantidad_descontada) throws ProductException {
+    public void rebajarSalida(float cantidad_descontada) {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_descontada = Math.round(cantidad_descontada);
-        }
-        else
-        {
-            throw new ProductException("No se pueden rebajar productos que no sean de tipo unidad");
         }
 
         if (cantidad_descontada < 0 || !corroborarSalida(cantidad_descontada))
@@ -165,14 +161,10 @@ public class Producto
         this.setCantidad(this.getCantidad() - cantidad_descontada);
     }
 
-    public void aumentarExistencias(float cantidad_aumentar) throws ProductException {
+    public void aumentarExistencias(float cantidad_aumentar) {
         if (this.dimension.equals("Unidad"))
         {
             cantidad_aumentar = Math.round(cantidad_aumentar);
-        }
-        else
-        {
-            throw new ProductException("No se pueden aumentar productos que no sean de tipo unidad");
         }
 
         if (cantidad_aumentar < 0)
