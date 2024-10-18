@@ -14,10 +14,7 @@ public class DatabaseConnector
     // Variables de conexión
     private static final String URL = "jdbc:mysql://localhost:3306/prueba";
     private static final String USER = "root";
-    private static final String PASSWORD = "@A57321418y";
-    private Connection connection = null;
-    private Statement statement = null;
-    private ResultSet resultSet = null;
+    private static final String PASSWORD = "proyectojav@";
 
     private Connection connect()
     {
@@ -48,7 +45,8 @@ public class DatabaseConnector
         }
     }
 
-    public List<Map<String, Object>> executeQuery(String query) {
+    public List<Map<String, Object>> executeQuery(String query)
+    {
         List<Map<String, Object>> results = new ArrayList<>();
         Connection connection = connect();
         
@@ -88,7 +86,6 @@ public class DatabaseConnector
     // Método para ejecutar actualizaciones (INSERT, UPDATE, DELETE)
     public void executeUpdate(String sql)
     {
-        int rowsAffected = 0;
         Connection connection = connect();
         
         if (connection != null)
@@ -96,7 +93,7 @@ public class DatabaseConnector
             try
             {
                 Statement statement = connection.createStatement();
-                rowsAffected = statement.executeUpdate(sql);
+                statement.executeUpdate(sql);
             }
             
             catch (SQLException e)

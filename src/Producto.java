@@ -27,7 +27,7 @@ class Producto
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
-        this.cantidad = (float) 0;
+        this.cantidad = cantidad;
         this.dimension = dimension;
         this.id_ubicacion = ubicacion.GetId();
         this.id_categoria = categoria.GetId();
@@ -92,7 +92,7 @@ class Producto
      * @param descontinuado Boolean de si el producto está descontinuado.
     */
 
-    public void GetDescontinuado(boolean descontinuado)
+    public void SetDescontinuado(boolean descontinuado)
     {
         this.descontinuado = descontinuado;
     }
@@ -158,7 +158,7 @@ class Producto
 
     public boolean CorroborarSalida(float cantidad_descontada)
     {
-        return cantidad_descontada > 0 & this.cantidad <= cantidad_descontada;
+        return (cantidad_descontada > 0 && this.cantidad >= cantidad_descontada);
     }
 
 
@@ -172,10 +172,12 @@ class Producto
 
         if (cantidad_descontada < 0 || CorroborarSalida(cantidad_descontada) == false)
         {
+            System.out.println("Mucho");
             cantidad_descontada = 0f;
         }
         
-        this.SetCantidad((float) this.GetCantidad() - cantidad_descontada);
+        this.cantidad -= cantidad_descontada;
+        System.out.println("Cant" + this.cantidad);
     }
 
 
@@ -192,15 +194,17 @@ class Producto
             cantidad_aumentar = 0f;
         }
         
-        this.SetCantidad((float) this.GetCantidad() + cantidad_aumentar);
+        this.cantidad = (float) this.cantidad + cantidad_aumentar;
     }
 
     public void InsertarFila()
     {
         DatabaseConnector db = new DatabaseConnector();
 
-        String query = "REPLACE INTO PRODUCTOS (ID_PRODUCTO, NOMBRE, TIPO, CANTIDAD, DIMENSIONES, DESCONTINUADO, ID_UBICACION, ID_CATEGORIA) " +
-        "VALUES (" + this.id + ", '" + this.nombre + "', '" + this.tipo + "', " + this.cantidad + ", '" + this.dimension + "', " + this.descontinuado + ", " + this.id_ubicacion + ", " + this.id_categoria + ")";
+        String query = "INSERT INTO PRODUCTOS (ID_PRODUCTO, NOMBRE, TIPO, CANTIDAD, DIMENSIONES, DESCONTINUADO, ID_UBICACION, ID_CATEGORIA) " +
+        "VALUES (" + this.id + ", '" + this.nombre + "', '" + this.tipo + "', " + this.cantidad + ", '" + this.dimension + "', " + this.descontinuado + ", " + this.id_ubicacion + ", " + this.id_categoria + ") " +
+        "ON DUPLICATE KEY UPDATE NOMBRE = '"  + this.nombre + "', TIPO = '" + this.tipo + "', CANTIDAD = " + this.cantidad + ", DIMENSIONES = '" + this.dimension + "', DESCONTINUADO = " + this.descontinuado + 
+        ", ID_UBICACION = " + this.id_ubicacion + ", ID_CATEGORIA = " + this.id_categoria;
         db.executeUpdate(query);
     }
 }

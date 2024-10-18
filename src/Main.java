@@ -30,10 +30,11 @@ class Main
             System.err.println("2) Crear/modificar una categoría");
             System.out.println("3) Crear/modificar/eliminar un producto");
             System.out.println("4) Crear/modificar/eliminar un empleado");
-            System.out.println("5) Gestionar una transacción");
-            System.out.println("6) *Ver información de un producto/ubicación/categoría/empleado");
-            System.out.println("7) *Filtrar gestiones por fecha y tipo");
-            System.out.println("8) Salir");
+            System.out.println("*5) Crear un cliente/proveedor");
+            System.out.println("6) Gestionar una transacción");
+            System.out.println("*7) Ver información de un producto/ubicación/categoría/empleado");
+            System.out.println("*8) Filtrar gestiones");
+            System.out.println("9) Salir");
             String menu = sc.nextLine();
 
             if(menu.equals("1"))
@@ -233,7 +234,12 @@ class Main
                 }
             }
 
-            else if(menu.equals("5"))
+            else if (menu.equals("5"))
+            {
+
+            }
+
+            else if(menu.equals("6"))
             {
                 System.out.println("\n¿Qué tipo de transacción desea hacer?");
                 System.out.println("1) Compra");
@@ -242,15 +248,15 @@ class Main
                 System.out.println("4) Disminución de existencias");
                 String opcion = sc.nextLine();
 
+                boolean flag2 = true;
+                ArrayList<Producto> productos = new ArrayList<>();
+                ArrayList<Float> cantidades = new ArrayList<>();
+
                 if (opcion.equals("1"))
                 {
-                    boolean flag2 = true;
-                    ArrayList<Producto> productos = new ArrayList<>();
-                    ArrayList<Float> cantidades = new ArrayList<>();
-
                     while(flag2)
                     {
-                        System.out.println("¿Desea ingresar un producto al listado?");
+                        System.out.println("\n¿Desea ingresar un producto al listado?");
                         System.out.println("1) Si");
                         System.out.println("2) No");
                         String opcion2 = sc.nextLine();
@@ -261,15 +267,14 @@ class Main
                             String identificador = sc.nextLine();
 
                             String query_productos = "SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = " + identificador + " AND TIPO IN ('MP', 'PR') AND DESCONTINUADO = false";
-                            
-                            boolean id_correcto = true;
+
                             try
                             {
                                 List<Map<String, Object>> prod = db.executeQuery(query_productos);
                                 Map<String, Object> fila = prod.get(0);
                             
                                 String nombre_producto = (String) fila.get("NOMBRE");
-                                System.out.println("El nombre del producto que eligió es: " + nombre_producto);
+                                System.out.println("\nEl nombre del producto que eligió es: " + nombre_producto);
                                 System.out.println("¿Es el producto correcto?");
                                 System.out.println("1) Si");
                                 System.out.println("Cualquier otra tecla) No");
@@ -289,6 +294,7 @@ class Main
 
                                     Producto producto = new Producto(id_producto, nombre_producto, tipo, cantidad, dimension, ubicacion, categoria);
                                     
+                                    System.out.println("");
                                     System.out.println("¿Qué cantidad de este producto comprará?" + " Sus dimensiones son: " + dimension);
                                     String cantidad_comprada_str = sc.nextLine();
 
@@ -302,7 +308,7 @@ class Main
                                         }
                                         else
                                         {
-                                            System.out.println("Cantidades incorrectas.");
+                                            System.out.println("\nCantidades incorrectas.");
                                         }
                                     }
                                     
@@ -356,6 +362,8 @@ class Main
                             producto_act.InsertarFila();
                         }
 
+                        System.out.println("\nEl listado que se gestionó ");
+                        System.out.println(gestion.ToString(productos));
                     }
                     
                     else
@@ -366,29 +374,389 @@ class Main
 
                 else if (opcion.equals("2"))
                 {
+                    while(flag2)
+                    {
+                        System.out.println("\n¿Desea ingresar un producto al listado?");
+                        System.out.println("1) Si");
+                        System.out.println("2) No");
+                        String opcion2 = sc.nextLine();
+
+                        if(opcion2.equals("1")) 
+                        {  
+                            System.out.println("\nIngrese el identificador del producto.");
+                            String identificador = sc.nextLine();
+
+                            String query_productos = "SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = " + identificador + " AND TIPO IN ('PT', 'PR') AND DESCONTINUADO = false";
+                            
+                            try
+                            {
+                                List<Map<String, Object>> prod = db.executeQuery(query_productos);
+                                Map<String, Object> fila = prod.get(0);
+                            
+                                String nombre_producto = (String) fila.get("NOMBRE");
+                                System.out.println("\nEl nombre del producto que eligió es: " + nombre_producto);
+                                System.out.println("¿Es el producto correcto?");
+                                System.out.println("1) Si");
+                                System.out.println("Cualquier otra tecla) No");
+                                String correcto = sc.nextLine();
+
+                                if(correcto.equals("1"))
+                                {
+                                    int id_producto = (int) fila.get("ID_PRODUCTO");
+                                    String tipo = (String) fila.get("TIPO");
+                                    float cantidad = (float) fila.get("CANTIDAD");
+                                    String dimension = (String) fila.get("DIMENSIONES");
+                                    int id_ubicacion = (int) fila.get("ID_UBICACION");
+                                    int id_categoria = (int) fila.get("ID_CATEGORIA");
+
+                                    Ubicacion ubicacion = new Ubicacion(id_ubicacion, " ");
+                                    Categoria categoria = new Categoria(id_categoria, " ");
+
+                                    Producto producto = new Producto(id_producto, nombre_producto, tipo, cantidad, dimension, ubicacion, categoria);
+                                    
+                                    System.out.println("");
+                                    System.out.println("¿Qué cantidad de este producto venderá?" + " Sus dimensiones son: " + dimension);
+                                    String cantidad_comprada_str = sc.nextLine();
+
+                                    try
+                                    {
+                                        float cantidad_comprada = Float.parseFloat(cantidad_comprada_str);
+                                        if(cantidad_comprada > 0)
+                                        {
+                                            productos.add(producto);
+                                            cantidades.add(cantidad_comprada);
+                                        }
+                                        else
+                                        {
+                                            System.out.println("\nCantidades incorrectas.");
+                                        }
+                                    }
+                                    
+                                    catch (Exception e)
+                                    {
+                                        System.out.println("\nIngresó datos incorrectos");
+                                    }
+                                }
+                            }
+
+                            catch (Exception e)
+                            {
+                                System.out.println("\nEl identificador que ingresó no existe o no corresponde a un Producto Terminado o Producto de Reventa o se encuentra descontinuado");
+                            }
+                        }
+
+                        else if(opcion2.equals("2"))
+                        {
+                            flag2 = false;
+                        }
+
+                        else
+                        {
+                            System.out.println("Ingresó una opción incorrecta.");
+                        }
+                    }
+
+                    if(!productos.isEmpty())
+                    {
+                        String query_id_max = "SELECT MAX(ID_GESTION) AS MAXIMO FROM GESTIONES";
+                        List<Map<String, Object>> maximos = db.executeQuery(query_id_max);
+                        Map<String, Object> filas = maximos.get(0);
+                        Integer id_maximo_prueba = (Integer) filas.get("MAXIMO");
+
+                        int id_maximo; 
+                        if (id_maximo_prueba == null)
+                        {
+                            id_maximo = 0;
+                        }
+                        else
+                        {
+                            id_maximo = id_maximo_prueba;
+                        }
+
+                        Gestion gestion = new Gestion(id_maximo + 1, "Ventas", productos, cantidades, empleado);
+                        gestion.InsertarFilaGestion();
+                        gestion.InsertarFilaTransaccion();
+
+                        System.out.println("\nEl listado que se gestionó ");
+                        System.out.println(gestion.ToString(productos));
+
+                        for (Producto producto_act : productos)
+                        {
+                            producto_act.InsertarFila();
+                        }
+                    }
                     
+                    else
+                    {
+                        System.out.println("\nNo se ingresó ningún producto.");
+                    }
                 }
 
                 else if (opcion.equals("3"))
                 {
+                    while(flag2)
+                    {
+                        System.out.println("\n¿Desea ingresar un producto al listado?");
+                        System.out.println("1) Si");
+                        System.out.println("2) No");
+                        String opcion2 = sc.nextLine();
+
+                        if(opcion2.equals("1")) 
+                        {  
+                            System.out.println("\nIngrese el identificador del producto.");
+                            String identificador = sc.nextLine();
+
+                            String query_productos = "SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = " + identificador + " AND DESCONTINUADO = false";
+
+                            try
+                            {
+                                List<Map<String, Object>> prod = db.executeQuery(query_productos);
+                                Map<String, Object> fila = prod.get(0);
+                            
+                                String nombre_producto = (String) fila.get("NOMBRE");
+                                System.out.println("\nEl nombre del producto que eligió es: " + nombre_producto);
+                                System.out.println("¿Es el producto correcto?");
+                                System.out.println("1) Si");
+                                System.out.println("Cualquier otra tecla) No");
+                                String correcto = sc.nextLine();
+
+                                if(correcto.equals("1"))
+                                {
+                                    int id_producto = (int) fila.get("ID_PRODUCTO");
+                                    String tipo = (String) fila.get("TIPO");
+                                    float cantidad = (float) fila.get("CANTIDAD");
+                                    String dimension = (String) fila.get("DIMENSIONES");
+                                    int id_ubicacion = (int) fila.get("ID_UBICACION");
+                                    int id_categoria = (int) fila.get("ID_CATEGORIA");
+
+                                    Ubicacion ubicacion = new Ubicacion(id_ubicacion, " ");
+                                    Categoria categoria = new Categoria(id_categoria, " ");
+
+                                    Producto producto = new Producto(id_producto, nombre_producto, tipo, cantidad, dimension, ubicacion, categoria);
+                                    
+                                    System.out.println("");
+                                    System.out.println("¿Qué cantidad de este producto comprará?" + " Sus dimensiones son: " + dimension);
+                                    String cantidad_comprada_str = sc.nextLine();
+
+                                    try
+                                    {
+                                        float cantidad_comprada = Float.parseFloat(cantidad_comprada_str);
+                                        if(cantidad_comprada > 0)
+                                        {
+                                            productos.add(producto);
+                                            cantidades.add(cantidad_comprada);
+                                        }
+                                        else
+                                        {
+                                            System.out.println("\nCantidades incorrectas.");
+                                        }
+                                    }
+                                    
+                                    catch (Exception e)
+                                    {
+                                        System.out.println("\nIngresó datos incorrectos");
+                                    }
+                                }
+                            }
+
+                            catch (Exception e)
+                            {
+                                System.out.println("\nEl identificador que ingresó no existe");
+                            }
+                        }
+
+                        else if(opcion2.equals("2"))
+                        {
+                            flag2 = false;
+                        }
+
+                        else
+                        {
+                            System.out.println("Ingresó una opción incorrecta.");
+                        }
+                    }
+
+                    if(!productos.isEmpty())
+                    {
+                        String query_id_max = "SELECT MAX(ID_GESTION) AS MAXIMO FROM GESTIONES";
+                        List<Map<String, Object>> maximos = db.executeQuery(query_id_max);
+                        Map<String, Object> filas = maximos.get(0);
+                        Integer id_maximo_prueba = (Integer) filas.get("MAXIMO");
+
+                        int id_maximo; 
+                        if (id_maximo_prueba == null)
+                        {
+                            id_maximo = 0;
+                        }
+                        else
+                        {
+                            id_maximo = id_maximo_prueba;
+                        }
+
+                        Gestion gestion = new Gestion(id_maximo + 1, "Entradas", productos, cantidades, empleado);
+                        gestion.InsertarFilaGestion();
+                        gestion.InsertarFilaTransaccion();
+
+                        for (Producto producto_act : productos)
+                        {
+                            producto_act.InsertarFila();
+                        }
+
+                        System.out.println("\nEl listado que se gestionó ");
+                        System.out.println(gestion.ToString(productos));
+                    }
                     
+                    else
+                    {
+                        System.out.println("\nNo se ingresó ningún producto.");
+                    }
                 }
 
                 else if (opcion.equals("4"))
                 {
-                    
-                }
+                    while(flag2)
+                    {
+                        System.out.println("\n¿Desea ingresar un producto al listado?");
+                        System.out.println("1) Si");
+                        System.out.println("2) No");
+                        String opcion2 = sc.nextLine();
 
+                        if(opcion2.equals("1")) 
+                        {  
+                            System.out.println("\nIngrese el identificador del producto.");
+                            String identificador = sc.nextLine();
+
+                            String query_productos = "SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = " + identificador + " AND DESCONTINUADO = false";
+                            
+                            try
+                            {
+                                List<Map<String, Object>> prod = db.executeQuery(query_productos);
+                                Map<String, Object> fila = prod.get(0);
+                            
+                                String nombre_producto = (String) fila.get("NOMBRE");
+                                System.out.println("\nEl nombre del producto que eligió es: " + nombre_producto);
+                                System.out.println("¿Es el producto correcto?");
+                                System.out.println("1) Si");
+                                System.out.println("Cualquier otra tecla) No");
+                                String correcto = sc.nextLine();
+
+                                if(correcto.equals("1"))
+                                {
+                                    int id_producto = (int) fila.get("ID_PRODUCTO");
+                                    String tipo = (String) fila.get("TIPO");
+                                    float cantidad = (float) fila.get("CANTIDAD");
+                                    String dimension = (String) fila.get("DIMENSIONES");
+                                    int id_ubicacion = (int) fila.get("ID_UBICACION");
+                                    int id_categoria = (int) fila.get("ID_CATEGORIA");
+
+                                    Ubicacion ubicacion = new Ubicacion(id_ubicacion, " ");
+                                    Categoria categoria = new Categoria(id_categoria, " ");
+
+                                    Producto producto = new Producto(id_producto, nombre_producto, tipo, cantidad, dimension, ubicacion, categoria);
+                                    
+                                    System.out.println("");
+                                    System.out.println("¿Qué cantidad de este producto venderá?" + " Sus dimensiones son: " + dimension);
+                                    String cantidad_comprada_str = sc.nextLine();
+
+                                    try
+                                    {
+                                        float cantidad_comprada = Float.parseFloat(cantidad_comprada_str);
+                                        if(cantidad_comprada > 0)
+                                        {
+                                            productos.add(producto);
+                                            cantidades.add(cantidad_comprada);
+                                        }
+                                        else
+                                        {
+                                            System.out.println("\nCantidades incorrectas.");
+                                        }
+                                    }
+                                    
+                                    catch (Exception e)
+                                    {
+                                        System.out.println("\nIngresó datos incorrectos.");
+                                    }
+                                }
+                            }
+
+                            catch (Exception e)
+                            {
+                                System.out.println("\nEl identificador que ingresó no existe.");
+                            }
+                        }
+
+                        else if(opcion2.equals("2"))
+                        {
+                            flag2 = false;
+                        }
+
+                        else
+                        {
+                            System.out.println("Ingresó una opción incorrecta.");
+                        }
+                    }
+
+                    if(!productos.isEmpty())
+                    {
+                        String query_id_max = "SELECT MAX(ID_GESTION) AS MAXIMO FROM GESTIONES";
+                        List<Map<String, Object>> maximos = db.executeQuery(query_id_max);
+                        Map<String, Object> filas = maximos.get(0);
+                        Integer id_maximo_prueba = (Integer) filas.get("MAXIMO");
+
+                        int id_maximo; 
+                        if (id_maximo_prueba == null)
+                        {
+                            id_maximo = 0;
+                        }
+                        else
+                        {
+                            id_maximo = id_maximo_prueba;
+                        }
+
+                        Gestion gestion = new Gestion(id_maximo + 1, "Salidas", productos, cantidades, empleado);
+                        gestion.InsertarFilaGestion();
+                        gestion.InsertarFilaTransaccion();
+
+                        System.out.println("\nEl listado que se gestionó.");
+                        System.out.println(gestion.ToString(productos));
+
+                        for (Producto producto_act : productos)
+                        {
+                            producto_act.InsertarFila();
+                        }
+                    }
+                    
+                    else
+                    {
+                        System.out.println("\nNo se ingresó ningún producto.");
+                    }
+                }
+                
                 else
                 {
-
+                    System.out.println("Ha ingresado una opción incorrecta.");
                 }
 
             }
 
+            else if(menu.equals("7"))
+            {
+                
+            }
+
             else if(menu.equals("8"))
             {
+                
+            }
+
+            else if(menu.equals("9"))
+            {
                 flag = false;
+            }
+            
+            else
+            {
+                System.out.println("Ha ingresado una opción incorrecta");
             }
         }
     }

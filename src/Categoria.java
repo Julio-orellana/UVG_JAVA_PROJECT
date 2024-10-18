@@ -9,8 +9,18 @@ class Categoria
         this.nombre = nombre;
     }
 
+    public void SetNombre(String nombre)
+    {
+        this.nombre = nombre;
+    }
+
     public int GetId()
     {
         return this.id;
+    }
+
+    public String GetNombre()
+    {
+        return this.nombre;
     }
 }
