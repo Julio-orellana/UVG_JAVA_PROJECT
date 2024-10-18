@@ -129,4 +129,13 @@ public class Storage {
         this.locations = locations;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Almacen: ").append(this.name).append("\n");
+        for (Location location : this.locations.values()) {
+            sb.append(location.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
 }
