@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import org.uvg.project.Exceptions.TransactionException;
 import org.uvg.project.GestionProductos.Transaction;
 
-public class Clientes
+public abstract class Clientes
 {
     private String nombre;
     private int id;
-    private ArrayList<Transaction> historial;
+    protected ArrayList<Transaction> historial;
 
     public Clientes(String nombre, int id)
     {

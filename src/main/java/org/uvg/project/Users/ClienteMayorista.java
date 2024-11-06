@@ -6,9 +6,9 @@ public class ClienteMayorista extends Clientes
 {
     private double descuento = 0.15;
     private int cantMin = 10;
-}
 
-public ClienteMayorista(String nombre, int id)
+
+public ClienteMayorista(String nombre, int id, double descuento, int cantMin)
 {
     super(nombre, id);
     this.descuento = descuento;
@@ -32,4 +32,4 @@ public void agregarCompra(Transaction compra) throws TransactionException
         throw new TransactionException("La compra debe de ser de 10 productos");
     }
     historial.add(compra);
-}
+}}
