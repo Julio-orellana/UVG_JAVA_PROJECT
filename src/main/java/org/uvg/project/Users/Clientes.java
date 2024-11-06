@@ -1,8 +1,9 @@
 package org.uvg.project.Users;
 
+import java.util.ArrayList;
+
 import org.uvg.project.Exceptions.TransactionException;
 import org.uvg.project.GestionProductos.Transaction;
-import java.util.ArrayList;
 
 public class Clientes
 {
@@ -21,15 +22,30 @@ public class Clientes
     {
         this.nombre = nombre;
     }
-
     public String getNombre()
     {
         return nombre;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
     }
     public int getId()
     {
         return id;
     }
+
+    public void setHistorial(ArrayList<Transaction> historial)
+    {
+        this.historial = historial;
+    }
+    public ArrayList<Transaction> getHistorial()
+    {
+        return historial;
+    }
+
+    public abstract void agregarCompra(Transaction compra) throws TransactionException;
 
     public void eliminarCompra(int index)
     {
@@ -48,5 +64,11 @@ public class Clientes
         {
             System.out.println(transaction);
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Cliente: " + nombre + " (ID: " + id + ")";
     }
 }
