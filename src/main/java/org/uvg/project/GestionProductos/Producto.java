@@ -6,6 +6,9 @@ import org.uvg.project.Storage.Location;
 import org.uvg.project.db.CRUD;
 import org.uvg.project.db.DBManager;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,31 +53,19 @@ public class Producto
     }
 
     // Nuevo constructor para la clase Producto
-    public Producto(int id, String nombre, int cantidad, String dimension, int storage_id, int id_ubicacion) throws ProductException
-    {
-        try {
-            if (id <= 0 || nombre != null || dimension != null || id_ubicacion <= 0 || storage_id <= 0)
-            {
-                this.id = id;
-                this.nombre = nombre;
-                this.cantidad = cantidad;
-                this.dimension = dimension;
-                this.location_id = id_ubicacion;
-                this.storage_id = storage_id;
-                this.CRUD = new CRUD();
-            }
-        } catch (DBException | NullPointerException e) {
-            throw new ProductException("No se pueden ingresar valores nulos");
-        }
-    }
-
-    // Nuevo constructor para la clase Producto
     public Producto(String nombre, int cantidad, String dimension, int storage_id, int id_ubicacion) throws ProductException
     {
         try {
             if (nombre != null || dimension != null || id_ubicacion <= 0 || storage_id <= 0)
             {
-                Producto.id++;
+                Statement stmt = DBManager.getStatement();
+                String query = "SELECT id FROM products";
+                ResultSet rs = stmt.executeQuery(query);
+                ArrayList<Integer> ids = new ArrayList<>();
+                while (rs.next()) {
+                    ids.add(rs.getInt("id"));
+                }
+                this.id = ids.get(ids.size() - 1) + 1;
                 this.nombre = nombre;
                 this.cantidad = cantidad;
                 this.dimension = dimension;
@@ -84,6 +75,8 @@ public class Producto
             }
         } catch (DBException | NullPointerException e) {
             throw new ProductException("No se pueden ingresar valores nulos");
+        } catch (SQLException e) {
+            throw new ProductException("Error al obtener el id del producto");
         }
     }
 
@@ -208,7 +201,7 @@ public class Producto
             CRUD.setQuery(selectQuery);
             List<Object> lista = CRUD.getObjects();
             for (int i = 0; i < lista.size(); i += 6) {
-                products.add(new Producto((int) lista.get(i), (String) lista.get(i + 1), (int) lista.get(i + 2), (String) lista.get(i + 3), (int) lista.get(i + 4), (int) lista.get(i + 5)));
+                products.add(new Producto((String) lista.get(i + 1), (int) lista.get(i + 2), (String) lista.get(i + 3), (int) lista.get(i + 4), (int) lista.get(i + 5)));
             }
             return products;
         } catch (DBException e) {
@@ -250,7 +243,7 @@ public class Producto
 
     @Override
     public String toString() {
-        return "Producto{" +
+        return "Producto{\n" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", cantidad=" + cantidad +
