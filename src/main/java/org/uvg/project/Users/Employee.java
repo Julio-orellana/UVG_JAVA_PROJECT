@@ -5,6 +5,7 @@ import java.util.Scanner;
 import org.uvg.project.Exceptions.EmployeeException;
 import org.uvg.project.GestionProductos.Producto;
 import org.uvg.project.GestionProductos.Transaction;
+import org.uvg.project.Storage.Location;
 import org.uvg.project.Storage.Storage;
 
 public class Employee {
@@ -12,15 +13,15 @@ public class Employee {
     private int id;
     private String name;
     private String email;
-    private String password;
+    private char gender;
     private String role;
     private Storage storage;
 
-    public Employee(int id, String name, String email, String password, String role) {
+    public Employee(int id, String name, String email, char gender, String role) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.gender = gender;
         this.role = role;
     }
 
@@ -70,8 +71,8 @@ public class Employee {
         return this.email;
     }
 
-    public String getPassword() {
-        return this.password;
+    public char getGender() {
+        return this.gender;
     }
 
     public String getRole() {
@@ -90,8 +91,8 @@ public class Employee {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setGender(char gender) {
+        this.gender = gender;
     }
 
     public void setRole(String role) {
