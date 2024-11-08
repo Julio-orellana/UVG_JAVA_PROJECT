@@ -24,7 +24,6 @@ public class ClienteMayorista extends Clientes
         return descuento;
     }
 
-    @Override
     public void agregarCompra(Transaction compra) throws TransactionException
     {
         if (compra.getQuantity() < cantMin)

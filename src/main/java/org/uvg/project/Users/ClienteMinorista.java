@@ -22,7 +22,6 @@ public class ClienteMinorista extends Clientes
         return limite;
     }
 
-    @Override
     public void agregarCompra(Transaction compra) throws TransactionException
     {
         if (compra.getQuantity() < limite)
