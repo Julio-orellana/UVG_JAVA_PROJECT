@@ -2,6 +2,7 @@ package org.uvg.project.Storage;
 
 import org.uvg.project.Exceptions.StorageException;
 import org.uvg.project.GestionProductos.Producto;
+import org.uvg.project.GestionProductos.Transaction;
 import org.uvg.project.db.DBManager;
 
 import java.sql.Connection;
@@ -15,6 +16,7 @@ public class Storage {
     private int id;
     private String name;
     private HashMap<Integer, Location> locations;
+    private ArrayList<Transaction> transactions;
 
     public Storage(int id, String name) {
         this.id = id;
@@ -71,7 +73,7 @@ public class Storage {
                     String dimension = rs.getString("dimension");
                     int storage_id = rs.getInt("storage_id");
                     int location_id = rs.getInt("location_id");
-                    products.add(new Producto(prod_id, prod_name, quantity, dimension, storage_id, location_id));
+                    products.add(new Producto(prod_name, quantity, dimension, storage_id, location_id));
                 }
                 location.setProducts(products);
             }
@@ -127,6 +129,14 @@ public class Storage {
 
     public void setLocations(HashMap<Integer, Location> locations) {
         this.locations = locations;
+    }
+
+    public void addTransacatcion(Transaction ts){
+        this.transactions.add(ts);
+    }
+
+    public ArrayList<Transaction> getTransactions(){
+        return this.transactions;
     }
 
     public String toString() {
