@@ -1,6 +1,9 @@
 package org.uvg.project.Users;
 
+import java.util.Scanner;
+
 import org.uvg.project.Exceptions.EmployeeException;
+import org.uvg.project.GestionProductos.Producto;
 import org.uvg.project.Storage.Storage;
 
 public class Employee {
@@ -20,9 +23,25 @@ public class Employee {
         this.role = role;
     }
 
-    public void sellProduct() throws EmployeeException {
+    public void sellProduct(Scanner scanner, Clientes client) throws EmployeeException {
 
         if (this.role.equals("seller") && this.storage != null) {
+            System.out.println("Ingresa el id del producto: ");
+            int productId = scanner.nextInt();
+            for (Location loc: this.storage.getLocations()){
+                for (Producto p: loc.getProducts()){
+                    if (p.getId() == productId && p.getCantidad() > 0){
+                        p.setCantidad(p.getCantidad() -1);
+
+                        System.out.println("Gracias por tu compra!");
+                    }
+                    else if (p.getId() == productId && p.getCantidad() == 0){
+                        throw new EmployeeException("No hay existencias para " + p.getNombre());
+                    }
+                }
+            }
+            throw new EmployeeException("Producto con id " + productId + " no encontrado.");
+
         } else if (this.role.equals("seller") && this.storage == null) {
             throw new EmployeeException("El empleado " + this.name + " no tiene asignado un almacen");
         } else {
