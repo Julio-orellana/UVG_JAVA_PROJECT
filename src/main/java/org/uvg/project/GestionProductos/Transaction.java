@@ -19,15 +19,13 @@ public class Transaction {
     private String date;
     private Producto product;
     private int quantity;
-    private double total;
 
     /**
      * Constructor de la clase Transaction
      * @param product
      * @param quantity
-     * @param total
      */
-    public Transaction(Producto product, int quantity, double total) {
+    public Transaction(Producto product, int quantity) {
         // Crear un id único para la transacción
         this.id = UUID.randomUUID().toString();
         // Obtener la fecha actual de la transacción
@@ -37,7 +35,6 @@ public class Transaction {
         this.date = formatter.format(date);
         this.product = product;
         this.quantity = quantity;
-        this.total = total;
     }
 
 
@@ -77,9 +74,6 @@ public class Transaction {
      * Método getTotal
      * @return total
      */
-    public double getTotal() {
-        return this.total;
-    }
 
     /**
      * Método setId
@@ -113,12 +107,5 @@ public class Transaction {
         this.quantity = quantity;
     }
 
-    /**
-     * Método setTotal
-     * @param total
-     */
-    public void setTotal(double total) {
-        this.total = total;
-    }
 
 }
