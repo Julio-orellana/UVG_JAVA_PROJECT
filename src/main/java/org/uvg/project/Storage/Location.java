@@ -4,7 +4,11 @@ import org.uvg.project.Exceptions.DBException;
 import org.uvg.project.Exceptions.LocationException;
 import org.uvg.project.GestionProductos.Producto;
 import org.uvg.project.db.CRUD;
+import org.uvg.project.db.DBManager;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +27,30 @@ public class Location {
         this.products = new ArrayList<>();
         try {
            this.CRUD = new CRUD();
+        } catch (DBException e) {
+            throw new LocationException("Error al conectar con la base de datos");
+        }
+    }
+
+    public Location(int storageId, String name) throws LocationException {
+        try {
+            Statement statement = DBManager.getStatement();
+            ResultSet rs = statement.executeQuery("SELECT id FROM locations");
+            ArrayList<Integer> ids = new ArrayList<>();
+            while (rs.next()) {
+                ids.add(rs.getInt("id"));
+            }
+            this.id = ids.get(ids.size() - 1) + 1;
+        } catch (DBException e) {
+            throw new LocationException("Error al conectar con la base de datos");
+        } catch (SQLException e) {
+            throw new LocationException("Error al obtener el id de la ubicación");
+        }
+        this.name = name;
+        this.storageId = storageId;
+        this.products = new ArrayList<>();
+        try {
+            this.CRUD = new CRUD();
         } catch (DBException e) {
             throw new LocationException("Error al conectar con la base de datos");
         }
