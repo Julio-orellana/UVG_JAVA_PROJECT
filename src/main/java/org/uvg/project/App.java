@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
-    
+
     static ArrayList<Clientes> clients = new ArrayList<Clientes>();
     static ArrayList<Employee> employees = new ArrayList<Employee>();
     static Storage storage = null;
@@ -207,6 +207,66 @@ public class App {
         } while (option != 0);
     }
 
+    public static void printCustomerMenu(){
+    System.out.println("0. Salir");
+    System.out.println("1. Ver productos disponibles");
+    System.out.println("2. Comprar producto");
+    System.out.println("3. Ver historial de compras");
+    }
+    public static void customerMenu(Scanner scanner) {
+    int option = 0;
+    do {
+        printCustomerMenu();
+        option = getInt(scanner);
+        int clientId;
+        switch (option) {
+            case 1:
+                for (Location ubicacion: storage.getLocations()){
+                    for (Producto producto: ubicacion.getProducts()){
+                        System.out.println(producto);
+                    }
+                }
+                break;
+            case 2:
+                System.out.println("Ingresa tu id de cliente: ");
+                clientId = getInt(scanner);
+                for (Clientes cliente: clients) {
+                    if (cliente.getId() == clientId) {
+                        try {
+                            if (employees.size() > 0) {
+                                sellProduct(scanner, clientId);
+                            } else {
+                                System.out.println("No hay empleados disponibles para realizar la venta");
+                            }
+                        } catch (ProductException ex){
+                            System.out.println(ex);
+                        }
+                    }
+                }
+                break;
+            case 3:
+                System.out.println("Historial de compras:");
+                System.out.println("Ingresa tu id de cliente: ");
+                clientId = getInt(scanner);
+                for (Clientes cliente: clients) {
+                    if (cliente.getId() == clientId) {
+                        try {
+                            cliente.mostrarHistorial();
+                        } catch (TransactionException ex){
+                            System.out.println(ex);
+                        }
+                    }
+                }
+
+                break;
+            case 0:
+                System.out.println("Saliendo...");
+               
+                break;
+            default:
+                System.out.println("Opción no válida");
+        }
+    } while (option != 0);}
     public static Transaction sellProduct(Scanner scanner, int clientId) throws ProductException {
         System.out.println("Ingresa tu id de empleado: ");
         int employeeId = getInt(scanner);
