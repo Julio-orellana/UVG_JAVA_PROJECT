@@ -2,18 +2,27 @@ package org.uvg.project;
 
 import org.uvg.project.Auth.Auth;
 import org.uvg.project.Exceptions.AuthException;
+import org.uvg.project.Exceptions.EmployeeException;
 import org.uvg.project.Exceptions.LocationException;
 import org.uvg.project.Exceptions.ProductException;
 import org.uvg.project.Exceptions.StorageException;
 import org.uvg.project.GestionProductos.Producto;
+import org.uvg.project.GestionProductos.Transaction;
 import org.uvg.project.Storage.Location;
 import org.uvg.project.Storage.Storage;
+import org.uvg.project.Users.Clientes;
+import org.uvg.project.Users.Employee;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App {
+    
+    static ArrayList<Clientes> clients = new ArrayList<Clientes>();
+    static ArrayList<Employee> employees = new ArrayList<Employee>();
+    static Storage storage = null;
 
     public static void main(String[] args) throws Exception {
 
@@ -196,6 +205,29 @@ public class App {
             }
 
         } while (option != 0);
+    }
+
+    public static Transaction sellProduct(Scanner scanner, int clientId) throws ProductException {
+        System.out.println("Ingresa tu id de empleado: ");
+        int employeeId = getInt(scanner);
+        for (Employee empleado : employees) {
+            if (empleado.getId() == employeeId) {
+                for (Clientes cliente : clients) {
+                    if (clientId == cliente.getId()) {
+                        try {
+                            Transaction transaction = empleado.sellProduct(scanner, cliente);
+                            storage.addTransacatcion(transaction);
+                            cliente.buyProduct(transaction);
+                            return transaction;
+                        } catch (EmployeeException e) {
+                            System.out.println(e);
+                        }
+                    }
+                }
+                System.out.println("No hay ningun cliente con id " + clientId);
+            }
+        }
+        throw new ProductException("No se encontro el empleado con id " + employeeId);
     }
 
     public static void printMenu(boolean isAuth) {
