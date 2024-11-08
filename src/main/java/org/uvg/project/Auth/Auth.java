@@ -50,6 +50,28 @@ public class Auth {
         return correctPassword != null && correctPassword.equals(password);
     }
 
+    public static boolean signUp(String table, String email, String name, String rol, char sex, String password) throws AuthException {
+
+            table = table.toLowerCase();
+            table = table.equals("customers") || table.equals("employee") ? table : null;
+            email = email.toLowerCase();
+            name = name.toLowerCase();
+
+            if (table != null) {
+
+                try {
+                    Statement stmt = DBManager.getStatement();
+                    stmt.executeUpdate("INSERT INTO " + table + " (email, name, rol, sex, password) VALUES ('" + email + "', '" + name + "', '" + rol + "', '" + sex + "', '" + Encryption.encrypt(password) + "')");
+                } catch (DBException | SQLException | SecurityException e) {
+                    throw new AuthException("Ocurrio un error al registrar al usuario, por favor intentelo de nuevo " + e.getMessage());
+                }
+            }
+            else {
+                throw new AuthException("Error al registrar al usuario");
+            }
+            return true;
+    }
+
     public static boolean signUp(String table, String email, String name, char sex, String birth, String password) throws AuthException {
 
         table = table.toLowerCase();
