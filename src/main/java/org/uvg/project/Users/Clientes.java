@@ -18,16 +18,6 @@ public class Clientes
         this.historial = new ArrayList<>();
     }
 
-    public Transaction buyProduct(Transaction transaction)
-    {
-        historial.add(transaction);
-        return transaction;
-    }
-
-    public void cambiarNombre(String nombre)
-    {
-        this.nombre = nombre;
-    }
     public String getNombre()
     {
         return nombre;
