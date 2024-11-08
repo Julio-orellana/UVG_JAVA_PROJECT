@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.uvg.project.Exceptions.TransactionException;
 import org.uvg.project.GestionProductos.Transaction;
 
-public abstract class Clientes
+public class Clientes
 {
     private String nombre;
     private int id;
@@ -45,7 +45,11 @@ public abstract class Clientes
         return historial;
     }
 
-    public abstract void agregarCompra(Transaction compra) throws TransactionException;
+    public Transaction buyProduct(Transaction transaction)
+    {
+        historial.add(transaction);
+        return transaction;
+    }
 
     public void eliminarCompra(int index)
     {
