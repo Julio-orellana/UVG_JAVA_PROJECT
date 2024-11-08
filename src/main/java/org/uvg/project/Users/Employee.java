@@ -1,12 +1,12 @@
 package org.uvg.project.Users;
 
-import java.util.Scanner;
-
 import org.uvg.project.Exceptions.EmployeeException;
 import org.uvg.project.GestionProductos.Producto;
 import org.uvg.project.GestionProductos.Transaction;
 import org.uvg.project.Storage.Location;
 import org.uvg.project.Storage.Storage;
+
+import java.util.Scanner;
 
 public class Employee {
 
@@ -71,7 +71,7 @@ public class Employee {
         return this.email;
     }
 
-    public char getGender() {
+    public char getPassword() {
         return this.gender;
     }
 
@@ -91,8 +91,8 @@ public class Employee {
         this.email = email;
     }
 
-    public void setGender(char gender) {
-        this.gender = gender;
+    public void setPassword(char password) {
+        this.gender = password;
     }
 
     public void setRole(String role) {
