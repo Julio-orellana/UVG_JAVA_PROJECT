@@ -1,6 +1,7 @@
 package org.uvg.project.GestionProductos;
 import java.util.ArrayList;
 
+import org.uvg.project.Storage.Storage;
 import org.uvg.project.Users.Employee;
 
 public class Report
@@ -46,9 +47,11 @@ public class Report
         this.employee = employee;
     }
 
-    public String toString()
+    public String toString(Storage storage)
     {
-        return "Reporte de " + employee.getName();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Reporte generado por " + employee.getName() + "\n");
+        sb.append(storage.toString());
+        return sb.toString();
     }
 }
-
