@@ -107,5 +107,11 @@ public class Transaction {
         this.quantity = quantity;
     }
 
+    public String toString() {
+        return "ID de Transaccion: " + this.id + "\n" +
+                "Fecha de transaccion: " + this.date + "\n" +
+                "Producto: " + this.product.getNombre() + "\n" +
+                "Cantidad: " + this.quantity + "\n";
+    }
 
 }

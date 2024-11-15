@@ -23,17 +23,20 @@ public class App {
     static ArrayList<Clientes> clients = new ArrayList<Clientes>();
     static ArrayList<Employee> employees = new ArrayList<Employee>();
     static Storage storage = null;
+    static HashMap<Boolean, Integer> isAuth;
 
     public static void main(String[] args) throws Exception {
 
         try {
             storage = Storage.loadStorage(1);
+            employees.add(new Employee(1, "Manuel", "email@example.com", 'M', "seller"));
         } catch (StorageException e) {
             System.out.println("No se pudo cargar el almacenamiento, " + e.getMessage());
         }
         Scanner scanner = new Scanner(System.in);
-        HashMap<Boolean, Integer> isAuth;
 
+
+    do{
         isAuth = authMenu(scanner);
 
         for (HashMap.Entry<Boolean, Integer> entry : isAuth.entrySet()) {
@@ -49,6 +52,8 @@ public class App {
                 }
             }
         }
+    } while (!isAuth.isEmpty());
+
     }
 
     public static void printEmployeeMenu(){
@@ -301,7 +306,11 @@ public class App {
                     break;
                 case 0:
                     System.out.println("Saliendo...");
-
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 default:
                     System.out.println("Opción no válida");

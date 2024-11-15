@@ -145,6 +145,9 @@ public class Storage {
         for (Location location : this.locations.values()) {
             sb.append(location.toString()).append("\n");
         }
+        for (Transaction transaction : this.transactions) {
+            sb.append(transaction.toString()).append("\n");
+        }
         return sb.toString();
     }
 

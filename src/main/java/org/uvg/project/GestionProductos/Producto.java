@@ -243,7 +243,7 @@ public class Producto
 
     @Override
     public String toString() {
-        return "Producto{\n" +
+        return "\nProducto{\n" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", cantidad=" + cantidad +
@@ -251,7 +251,7 @@ public class Producto
                 ", storage_id=" + storage_id +
                 ", location_id=" + location_id +
                 ", id_categoria=" + id_categoria +
-                '}';
+                "}\n";
     }
 
 }
